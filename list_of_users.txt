@@ -1,0 +1,18 @@
+user1 pasw1
+user2 pasw2
+user3 pasw3
+user4 pasw4
+user5 pasw5
+user6 pasw6
+user7 pasw7
+user8 pasw8
+user9 pasw9
+1
+1
+0
+2
+2
+0
+3
+3
+0

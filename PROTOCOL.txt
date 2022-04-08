@@ -1,0 +1,86 @@
+Komunikacja odbywa się za pomocą jednej struktury. Klienci mają osobne kolejki dla komunikatów przychodzących od serwera, a serwer jedną wspólną kolejkę dla komunikatów przychodzących od klientów.
+
+struct message {	 
+	long type;	// od kogo wiadomość
+	char text[400];	// treść wiadomości
+	int address;	// do kogo <1,...> - indeks użytkownika
+	time_t message_time; // czas wiadomości
+};
+struct message_buf{
+	long type;	//10-logowanie {1,2,..}-obsługa użytkownika
+	char text[200];
+};
+W zależności od celu wiadomości komunikatu jest zmieniany jego typ.
+
+1) logowanie 
+Klient wysyła 2 komunikaty:
+	type: 100 - klient chce zalogować
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: login_użytkownika/hasło_użytkownika
+Serwer zwraca 2 komunikaty z tekstem "poprawne":
+	type: 100 - klient chce zalogować
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: "poprawne"
+
+2) Wylogowanie:
+Klient wysyła komunikat:
+	type: 12
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: indeks użytkownika
+
+3) Podgląd listy zalogowanych uzytkownikow:
+Klient wysyła komunikat:
+	type: 13
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: indeks użytkownika
+Serwer zwraca komunikat z typem:
+	type: 13
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: tekst listy zalogowanych użytkownikóq
+
+4) Rejestracja do serweru:
+Klient wysyła 2 komunikaty:
+	type: 14
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: indeks użytkownika / numer serwera do rejestracji
+Serwer zwraca komunikat z typem:
+	type: 14
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: stan rejestracji na serwerach
+
+5) Wyjście z serweru:
+Klient wysyła 2 komunikaty:
+	type: 15
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: indeks użytkownika / numer serwera dla wyjścia
+Serwer zwraca komunikat z typem:
+	type: 15
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: stan rejestracji na serwerach
+
+6) Sprawdzenie użytkowników, należących do serwera
+Klient wysyła  komunikat:
+	type: 16
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: numer serwera 
+Serwer zwraca komunikat z typem:
+	type: 16
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: komunikat z listą użytkowników
+
+7) Wyslanie wiadomosci do uzytkownika:
+Klient wysyła  komunikat:
+	type: indeks - unikatowy indeks użytkownika
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: treść wiadomości do użytkownika
+
+8) Wysłanie wiadomości do serwera
+Klient wysyła komunikat:
+	type: 19
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: treść wiadomości do serwera
+
+9) Odebranie wiadomości:
+Klient otrzymuje komunikat:
+	address: id_server- klucz kolejki uzywanej do komunikatów przychodzących od serwera
+	text: wiadomości
